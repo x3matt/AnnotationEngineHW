@@ -9,7 +9,7 @@ import project.engine.StartMethod;
 public class AdminService {
     @RequestBody
     @StartMethod
-    public void run(@RequestBody Admin admin) {
+    public void run(@ConsoleInput(displayMessage = "Admin : Write name(String) and password(String) in JSON -> {name: <your name> , password: <your password>}") String input,@RequestBody Admin admin) {
         System.out.println("admin service -> run() -> Admin.class");
         System.out.println(admin);
     }
