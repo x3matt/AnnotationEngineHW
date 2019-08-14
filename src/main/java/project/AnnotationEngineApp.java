@@ -24,7 +24,6 @@ public class AnnotationEngineApp {
         for(Class clazz:services){
             Object serviceInstance = clazz.newInstance();
             Method[] methods = clazz.getDeclaredMethods();
-
             for(Method method:methods){
                 if(!method.isAnnotationPresent(StartMethod.class)){ continue;}
                 Parameter[] parameters = method.getParameters();
@@ -35,19 +34,15 @@ public class AnnotationEngineApp {
                     if(parameter.isAnnotationPresent(ConsoleInput.class)){
                        ConsoleInput consoleInput = parameter.getAnnotation(ConsoleInput.class);
                         System.out.println(consoleInput.displayMessage());
-                        input = scanner.nextLine();
                     }
                     if(parameter.isAnnotationPresent(RequestBody.class)){
-                        System.out.println("Enter JSON:");
                         input = scanner.nextLine();
                         ObjectMapper mapper = new ObjectMapper();
                         requestBodyInput = mapper.readValue(input, parameter.getType());
                     }
                 }
-                if(input != null && requestBodyInput == null){
-                    method.invoke(serviceInstance,input);
-                }else if(requestBodyInput != null && method.isAnnotationPresent(RequestBody.class)){
-                    method.invoke(serviceInstance,requestBodyInput);
+                if(requestBodyInput != null){
+                    method.invoke(serviceInstance,input,requestBodyInput);
                 }
                 else{
                     Object[] params = new Object[parameters.length];
